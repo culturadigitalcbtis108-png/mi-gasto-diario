@@ -8,22 +8,43 @@
 <style>
 :root{--bg:#f3f7f5;--card:#fff;--ink:#18332e;--muted:#71817c;--green:#167653;--mint:#e1f3eb;--line:#e5ece8;--red:#c74747;--shadow:0 12px 35px #173d3010}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
-header{background:linear-gradient(135deg,#123b35,#1b7254);color:white;padding:26px 20px 30px;border-radius:0 0 28px 28px}
-.wrap{max-width:720px;margin:auto} .top{display:flex;justify-content:space-between;align-items:center}.brand{font-weight:800;font-size:20px;letter-spacing:-.4px}.date{font-size:12px;opacity:.8;margin-top:20px;text-transform:capitalize}
-.total-label{font-size:13px;opacity:.8;margin-top:12px}.total{font-size:42px;font-weight:800;letter-spacing:-1.5px;margin:2px 0}.count{font-size:12px;opacity:.8}
-main{padding:18px 16px 40px;max-width:720px;margin:auto}.card{background:var(--card);border-radius:20px;padding:18px;margin-bottom:15px;box-shadow:var(--shadow)}
-h2{font-size:16px;margin:0 0 14px}.voice{width:100%;border:0;border-radius:17px;padding:19px 14px;background:var(--mint);color:var(--green);font-weight:750;font-size:16px;display:flex;align-items:center;justify-content:center;gap:11px;cursor:pointer}
-.mic{width:48px;height:48px;border-radius:50%;background:var(--green);color:white;display:grid;place-items:center;font-size:22px}.voice.listening{background:#ffe8e8;color:var(--red)}.voice.listening .mic{background:var(--red);animation:pulse 1s infinite}
+header{background:linear-gradient(135deg,#123b35,#1b7254);color:white;padding:14px 16px 16px;border-radius:0 0 22px 22px}
+.wrap{max-width:720px;margin:auto} .top{display:flex;justify-content:space-between;align-items:center}.brand{font-weight:800;font-size:20px;letter-spacing:-.4px}.date{font-size:11px;opacity:.8;margin-top:7px;text-transform:capitalize}
+.total-label{font-size:11px;opacity:.8;margin-top:7px}.total{font-size:32px;font-weight:800;letter-spacing:-1px;margin:0}.count{font-size:11px;opacity:.8}
+main{padding:12px 14px 88px;max-width:720px;margin:auto}.card{background:var(--card);border-radius:18px;padding:15px;margin-bottom:12px;box-shadow:var(--shadow)}
+h2{font-size:16px;margin:0 0 14px}.voice{width:100%;border:0;border-radius:17px;padding:13px 12px;background:var(--mint);color:var(--green);font-weight:750;font-size:16px;display:flex;align-items:center;justify-content:center;gap:11px;cursor:pointer}
+.mic{width:42px;height:42px;border-radius:50%;background:var(--green);color:white;display:grid;place-items:center;font-size:22px}.voice.listening{background:#ffe8e8;color:var(--red)}.voice.listening .mic{background:var(--red);animation:pulse 1s infinite}
 @keyframes pulse{50%{box-shadow:0 0 0 9px #c7474720}}
 .hint{text-align:center;color:var(--muted);font-size:12px;margin:10px 0 0}.transcript{font-size:13px;color:var(--muted);margin-top:10px;min-height:18px}
-.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}label{font-size:11px;color:var(--muted);display:block;margin-bottom:6px}input,select{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:white;color:var(--ink);font:inherit;min-width:0}
-.primary,.secondary{border:0;border-radius:12px;padding:13px 16px;font-weight:750;cursor:pointer}.primary{background:var(--green);color:white;width:100%;margin-top:12px}.secondary{background:var(--mint);color:var(--green)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}label{font-size:11px;color:var(--muted);display:block;margin-bottom:6px}input,select{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px;background:white;color:var(--ink);font:inherit;min-width:0}
+.primary,.secondary{border:0;border-radius:12px;padding:13px 16px;font-weight:750;cursor:pointer}.primary{background:var(--green);color:white;width:100%;margin-top:9px}.secondary{background:var(--mint);color:var(--green)}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap}.toolbar button{flex:1}
 .row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.row:last-child{border:0}.ico{width:42px;height:42px;background:#f0f5f2;border-radius:13px;display:grid;place-items:center;font-size:19px}.details{flex:1;min-width:0}.concept{font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis}.meta{font-size:11px;color:var(--muted);margin-top:3px}.amount{font-weight:750;font-size:14px;white-space:nowrap}.delete{border:0;background:none;color:#a2afaa;font-size:18px;cursor:pointer;padding:5px}
 .empty{text-align:center;color:var(--muted);padding:20px 5px;font-size:13px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.budgetbar{height:9px;background:#e8efeb;border-radius:20px;overflow:hidden;margin-top:10px}.budgetfill{height:100%;width:0;background:#167653;border-radius:20px;transition:width .2s}.budgetfill.over{background:#c74747}.budgetnote{font-size:12px;color:var(--muted);margin-top:8px}.budgetedit{display:flex;gap:8px;margin-top:12px}.budgetedit input{flex:1}.budgetedit button{white-space:nowrap}.stat{background:#f5f8f6;border-radius:14px;padding:13px}.stat small{display:block;color:var(--muted);font-size:11px}.stat strong{font-size:19px;display:block;margin-top:4px}
 input[type=date]{color-scheme:light}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.section-head h2{margin:0}
 footer{text-align:center;color:var(--muted);font-size:11px;padding:5px 0 25px}
-@media(max-width:380px){.total{font-size:36px}.fields{grid-template-columns:1fr}.top .secondary{font-size:11px}}
+@media(max-width:380px){.total{font-size:30px}.fields{grid-template-columns:1fr 1fr}.top .secondary{font-size:11px}}
+
+.page{display:none}.page.active{display:block}
+.bottomnav{position:fixed;z-index:20;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;padding:7px 12px calc(7px + env(safe-area-inset-bottom));box-shadow:0 -5px 20px #173d3010}
+.bottomnav button{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:700;font-size:12px;padding:8px 5px;border-radius:12px;cursor:pointer}
+.bottomnav button.active{background:var(--mint);color:var(--green)}
+.bottomnav span{display:block;font-size:19px;margin-bottom:2px}
+.register-card{margin-top:2px}
+@media(max-height:740px) and (max-width:600px){
+ header{padding:10px 15px 12px}
+ .date{margin-top:4px}
+ .total-label{margin-top:4px}
+ .total{font-size:29px}
+ main{padding-top:8px}
+ .card{padding:12px;margin-bottom:9px}
+ h2{margin-bottom:9px}
+ .voice{padding:10px}
+ .mic{width:36px;height:36px}
+ .hint{margin-top:6px}
+ .fields{margin-top:7px}
+ .primary{padding:11px;margin-top:7px}
+}
 </style>
 </head>
 <body>
@@ -32,46 +53,54 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:5px 0 25px}
  <div class="date" id="todayLabel"></div><div class="total-label">Total gastado hoy</div><div class="total" id="todayTotal">$0.00</div><div class="count" id="todayCount">0 gastos registrados</div>
 </div></header>
 <main>
- <section class="card">
-  <h2>Registrar un gasto</h2>
-  <button class="voice" id="voiceBtn"><span class="mic">🎙</span><span id="voiceText">Toca para dictar tu gasto</span></button>
-  <p class="hint">Por ejemplo: “Comida 150 pesos” o “Gasolina 300”</p>
-  <div class="transcript" id="transcript" aria-live="polite"></div>
-  <div class="fields">
-   <div><label for="concept">CONCEPTO</label><input id="concept" placeholder="Ej. Comida"></div>
-   <div><label for="amount">CANTIDAD (MXN)</label><input id="amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="0.00"></div>
-  </div>
-  <button class="primary" id="saveBtn">＋ Guardar gasto</button>
+ <section id="registerPage" class="page active">
+  <section class="card register-card">
+   <h2>Registrar un gasto</h2>
+   <button class="voice" id="voiceBtn"><span class="mic">🎙</span><span id="voiceText">Toca para dictar tu gasto</span></button>
+   <p class="hint">Ejemplo: “Comida 150 pesos” o “Gasolina 300”</p>
+   <div class="transcript" id="transcript" aria-live="polite"></div>
+   <div class="fields">
+    <div><label for="concept">CONCEPTO</label><input id="concept" placeholder="Ej. Comida"></div>
+    <div><label for="amount">CANTIDAD (MXN)</label><input id="amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="0.00"></div>
+   </div>
+   <button class="primary" id="saveBtn">＋ Guardar gasto</button>
+  </section>
  </section>
- <section class="card">
-  <div class="section-head"><h2>Presupuesto diario</h2><span id="budgetStatus" class="meta">Sin configurar</span></div>
-  <div class="stats">
-   <div class="stat"><small>Presupuesto del día</small><strong id="budgetAmount">$0.00</strong></div>
-   <div class="stat"><small>Disponible hoy</small><strong id="budgetRemaining">—</strong></div>
-  </div>
-  <div class="budgetbar"><div class="budgetfill" id="budgetFill"></div></div>
-  <div class="budgetnote" id="budgetNote">Define cuánto quieres gastar como máximo al día.</div>
-  <div class="budgetedit"><input id="budgetInput" type="number" min="1" step="0.01" inputmode="decimal" placeholder="Ej. 500"><button class="secondary" id="budgetSave">Guardar límite</button></div>
+ <section id="summaryPage" class="page">
+  <section class="card">
+   <div class="section-head"><h2>Presupuesto diario</h2><span id="budgetStatus" class="meta">Sin configurar</span></div>
+   <div class="stats">
+    <div class="stat"><small>Presupuesto del día</small><strong id="budgetAmount">$0.00</strong></div>
+    <div class="stat"><small>Disponible hoy</small><strong id="budgetRemaining">—</strong></div>
+   </div>
+   <div class="budgetbar"><div class="budgetfill" id="budgetFill"></div></div>
+   <div class="budgetnote" id="budgetNote">Define cuánto quieres gastar como máximo al día.</div>
+   <div class="budgetedit"><input id="budgetInput" type="number" min="1" step="0.01" inputmode="decimal" placeholder="Ej. 500"><button class="secondary" id="budgetSave">Guardar límite</button></div>
+  </section>
+  <section class="card">
+   <div class="section-head"><h2>Resumen</h2><input id="filterDate" type="date" style="width:auto;padding:8px;font-size:12px"></div>
+   <div class="stats">
+    <div class="stat"><small>Total del día seleccionado</small><strong id="selectedTotal">$0.00</strong></div>
+    <div class="stat"><small>Movimientos</small><strong id="selectedCount">0</strong></div>
+   </div>
+  </section>
+  <section class="card">
+   <div class="section-head"><h2>Movimientos</h2><button class="secondary" id="exportBtn">Exportar CSV</button></div>
+   <div id="expenseList"><div class="empty">Todavía no hay gastos para esta fecha.</div></div>
+  </section>
+  <section class="card">
+   <h2>Acumulado del mes</h2><div class="stats">
+    <div class="stat"><small>Gastado este mes</small><strong id="monthTotal">$0.00</strong></div>
+    <div class="stat"><small>Total de registros</small><strong id="allCount">0</strong></div>
+   </div>
+  </section>
+  <footer>Los datos se guardan en este dispositivo. Recuerda exportar una copia de seguridad.</footer>
  </section>
- <section class="card">
-  <div class="section-head"><h2>Resumen</h2><input id="filterDate" type="date" style="width:auto;padding:8px;font-size:12px"></div>
-  <div class="stats">
-   <div class="stat"><small>Total del día seleccionado</small><strong id="selectedTotal">$0.00</strong></div>
-   <div class="stat"><small>Movimientos</small><strong id="selectedCount">0</strong></div>
-  </div>
- </section>
- <section class="card">
-  <div class="section-head"><h2>Movimientos</h2><button class="secondary" id="exportBtn">Exportar CSV</button></div>
-  <div id="expenseList"><div class="empty">Todavía no hay gastos para esta fecha.</div></div>
- </section>
- <section class="card">
-  <h2>Acumulado del mes</h2><div class="stats">
-   <div class="stat"><small>Gastado este mes</small><strong id="monthTotal">$0.00</strong></div>
-   <div class="stat"><small>Total de registros</small><strong id="allCount">0</strong></div>
-  </div>
- </section>
- <footer>Los datos se guardan en este dispositivo. Recuerda exportar una copia de seguridad.</footer>
 </main>
+<nav class="bottomnav" aria-label="Navegación principal">
+ <button id="tabRegister" class="active" type="button"><span>＋</span>Registrar gasto</button>
+ <button id="tabSummary" type="button"><span>▤</span>Resumen y movimientos</button>
+</nav>
 <script>
 const $=id=>document.getElementById(id);
 const money=n=>new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN'}).format(n);
@@ -81,6 +110,17 @@ let expenses=JSON.parse(localStorage.getItem('mgd_expenses')||'[]');
 let dailyBudget=Number(localStorage.getItem('mgd_daily_budget')||0);
 let deferredPrompt=null;
 function saveData(){localStorage.setItem('mgd_expenses',JSON.stringify(expenses));render()}
+function showPage(which){
+ const isRegister=which==='register';
+ $('registerPage').classList.toggle('active',isRegister);
+ $('summaryPage').classList.toggle('active',!isRegister);
+ $('tabRegister').classList.toggle('active',isRegister);
+ $('tabSummary').classList.toggle('active',!isRegister);
+ if(!isRegister) render();
+ window.scrollTo({top:0,behavior:'instant'});
+}
+$('tabRegister').onclick=()=>showPage('register');
+$('tabSummary').onclick=()=>showPage('summary');
 function render(){
  const chosen=$('filterDate').value||today;
  const todayItems=expenses.filter(e=>e.date===today), selected=expenses.filter(e=>e.date===chosen);
