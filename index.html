@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#123b35"><meta name="description" content="Registra tus gastos diarios por voz o manualmente.">
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Mi Gasto Diario</title>
+<style>
+:root{--bg:#f3f7f5;--card:#fff;--ink:#18332e;--muted:#71817c;--green:#167653;--mint:#e1f3eb;--line:#e5ece8;--red:#c74747;--shadow:0 12px 35px #173d3010}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:linear-gradient(135deg,#123b35,#1b7254);color:white;padding:26px 20px 30px;border-radius:0 0 28px 28px}
+.wrap{max-width:720px;margin:auto} .top{display:flex;justify-content:space-between;align-items:center}.brand{font-weight:800;font-size:20px;letter-spacing:-.4px}.date{font-size:12px;opacity:.8;margin-top:20px;text-transform:capitalize}
+.total-label{font-size:13px;opacity:.8;margin-top:12px}.total{font-size:42px;font-weight:800;letter-spacing:-1.5px;margin:2px 0}.count{font-size:12px;opacity:.8}
+main{padding:18px 16px 40px;max-width:720px;margin:auto}.card{background:var(--card);border-radius:20px;padding:18px;margin-bottom:15px;box-shadow:var(--shadow)}
+h2{font-size:16px;margin:0 0 14px}.voice{width:100%;border:0;border-radius:17px;padding:19px 14px;background:var(--mint);color:var(--green);font-weight:750;font-size:16px;display:flex;align-items:center;justify-content:center;gap:11px;cursor:pointer}
+.mic{width:48px;height:48px;border-radius:50%;background:var(--green);color:white;display:grid;place-items:center;font-size:22px}.voice.listening{background:#ffe8e8;color:var(--red)}.voice.listening .mic{background:var(--red);animation:pulse 1s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 9px #c7474720}}
+.hint{text-align:center;color:var(--muted);font-size:12px;margin:10px 0 0}.transcript{font-size:13px;color:var(--muted);margin-top:10px;min-height:18px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}label{font-size:11px;color:var(--muted);display:block;margin-bottom:6px}input,select{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:white;color:var(--ink);font:inherit;min-width:0}
+.primary,.secondary{border:0;border-radius:12px;padding:13px 16px;font-weight:750;cursor:pointer}.primary{background:var(--green);color:white;width:100%;margin-top:12px}.secondary{background:var(--mint);color:var(--green)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}.toolbar button{flex:1}
+.row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.row:last-child{border:0}.ico{width:42px;height:42px;background:#f0f5f2;border-radius:13px;display:grid;place-items:center;font-size:19px}.details{flex:1;min-width:0}.concept{font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis}.meta{font-size:11px;color:var(--muted);margin-top:3px}.amount{font-weight:750;font-size:14px;white-space:nowrap}.delete{border:0;background:none;color:#a2afaa;font-size:18px;cursor:pointer;padding:5px}
+.empty{text-align:center;color:var(--muted);padding:20px 5px;font-size:13px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.budgetbar{height:9px;background:#e8efeb;border-radius:20px;overflow:hidden;margin-top:10px}.budgetfill{height:100%;width:0;background:#167653;border-radius:20px;transition:width .2s}.budgetfill.over{background:#c74747}.budgetnote{font-size:12px;color:var(--muted);margin-top:8px}.budgetedit{display:flex;gap:8px;margin-top:12px}.budgetedit input{flex:1}.budgetedit button{white-space:nowrap}.stat{background:#f5f8f6;border-radius:14px;padding:13px}.stat small{display:block;color:var(--muted);font-size:11px}.stat strong{font-size:19px;display:block;margin-top:4px}
+input[type=date]{color-scheme:light}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.section-head h2{margin:0}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:5px 0 25px}
+@media(max-width:380px){.total{font-size:36px}.fields{grid-template-columns:1fr}.top .secondary{font-size:11px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+ <div class="top"><div class="brand">🌿 Mi Gasto Diario</div><button class="secondary" id="installBtn" hidden>Instalar app</button></div>
+ <div class="date" id="todayLabel"></div><div class="total-label">Total gastado hoy</div><div class="total" id="todayTotal">$0.00</div><div class="count" id="todayCount">0 gastos registrados</div>
+</div></header>
+<main>
+ <section class="card">
+  <h2>Registrar un gasto</h2>
+  <button class="voice" id="voiceBtn"><span class="mic">🎙</span><span id="voiceText">Toca para dictar tu gasto</span></button>
+  <p class="hint">Por ejemplo: “Comida 150 pesos” o “Gasolina 300”</p>
+  <div class="transcript" id="transcript" aria-live="polite"></div>
+  <div class="fields">
+   <div><label for="concept">CONCEPTO</label><input id="concept" placeholder="Ej. Comida"></div>
+   <div><label for="amount">CANTIDAD (MXN)</label><input id="amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="0.00"></div>
+  </div>
+  <button class="primary" id="saveBtn">＋ Guardar gasto</button>
+ </section>
+ <section class="card">
+  <div class="section-head"><h2>Presupuesto diario</h2><span id="budgetStatus" class="meta">Sin configurar</span></div>
+  <div class="stats">
+   <div class="stat"><small>Presupuesto del día</small><strong id="budgetAmount">$0.00</strong></div>
+   <div class="stat"><small>Disponible hoy</small><strong id="budgetRemaining">—</strong></div>
+  </div>
+  <div class="budgetbar"><div class="budgetfill" id="budgetFill"></div></div>
+  <div class="budgetnote" id="budgetNote">Define cuánto quieres gastar como máximo al día.</div>
+  <div class="budgetedit"><input id="budgetInput" type="number" min="1" step="0.01" inputmode="decimal" placeholder="Ej. 500"><button class="secondary" id="budgetSave">Guardar límite</button></div>
+ </section>
+ <section class="card">
+  <div class="section-head"><h2>Resumen</h2><input id="filterDate" type="date" style="width:auto;padding:8px;font-size:12px"></div>
+  <div class="stats">
+   <div class="stat"><small>Total del día seleccionado</small><strong id="selectedTotal">$0.00</strong></div>
+   <div class="stat"><small>Movimientos</small><strong id="selectedCount">0</strong></div>
+  </div>
+ </section>
+ <section class="card">
+  <div class="section-head"><h2>Movimientos</h2><button class="secondary" id="exportBtn">Exportar CSV</button></div>
+  <div id="expenseList"><div class="empty">Todavía no hay gastos para esta fecha.</div></div>
+ </section>
+ <section class="card">
+  <h2>Acumulado del mes</h2><div class="stats">
+   <div class="stat"><small>Gastado este mes</small><strong id="monthTotal">$0.00</strong></div>
+   <div class="stat"><small>Total de registros</small><strong id="allCount">0</strong></div>
+  </div>
+ </section>
+ <footer>Los datos se guardan en este dispositivo. Recuerda exportar una copia de seguridad.</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const money=n=>new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN'}).format(n);
+const dateKey=d=>{const x=new Date(d);return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`};
+const today=dateKey(new Date());
+let expenses=JSON.parse(localStorage.getItem('mgd_expenses')||'[]');
+let dailyBudget=Number(localStorage.getItem('mgd_daily_budget')||0);
+let deferredPrompt=null;
+function saveData(){localStorage.setItem('mgd_expenses',JSON.stringify(expenses));render()}
+function render(){
+ const chosen=$('filterDate').value||today;
+ const todayItems=expenses.filter(e=>e.date===today), selected=expenses.filter(e=>e.date===chosen);
+ const sum=a=>a.reduce((s,e)=>s+Number(e.amount),0);
+ $('todayLabel').textContent=new Intl.DateTimeFormat('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date());
+ $('todayTotal').textContent=money(sum(todayItems));$('todayCount').textContent=`${todayItems.length} ${todayItems.length===1?'gasto registrado':'gastos registrados'}`;
+ const spentToday=sum(todayItems), remaining=dailyBudget-spentToday, pct=dailyBudget>0?Math.min(100,spentToday/dailyBudget*100):0;
+ $('budgetAmount').textContent=dailyBudget>0?money(dailyBudget):'Sin límite';
+ $('budgetRemaining').textContent=dailyBudget>0?money(remaining):'—';
+ $('budgetRemaining').style.color=dailyBudget>0&&remaining<0?'var(--red)':'var(--ink)';
+ $('budgetStatus').textContent=dailyBudget<=0?'Sin configurar':spentToday>dailyBudget?'Límite superado':pct>=80?'Casi al límite':'Dentro del límite';
+ $('budgetFill').style.width=pct+'%';$('budgetFill').classList.toggle('over',spentToday>dailyBudget);
+ $('budgetNote').textContent=dailyBudget<=0?'Define cuánto quieres gastar como máximo al día.':spentToday>dailyBudget?'Has superado tu presupuesto por '+money(spentToday-dailyBudget)+'.':`Has utilizado ${pct.toFixed(0)}% de tu presupuesto diario.`;
+ $('selectedTotal').textContent=money(sum(selected));$('selectedCount').textContent=selected.length;
+ const now=new Date(), month=expenses.filter(e=>e.date.slice(0,7)===dateKey(now).slice(0,7));
+ $('monthTotal').textContent=money(sum(month));$('allCount').textContent=expenses.length;
+ $('expenseList').innerHTML='';
+ if(!selected.length){$('expenseList').innerHTML='<div class="empty">Todavía no hay gastos para esta fecha.</div>';return}
+ selected.slice().sort((a,b)=>b.createdAt-a.createdAt).forEach(e=>{
+  const row=document.createElement('div');row.className='row';
+  const ico=document.createElement('div');ico.className='ico';ico.textContent=iconFor(e.concept);
+  const details=document.createElement('div');details.className='details';
+  const concept=document.createElement('div');concept.className='concept';concept.textContent=e.concept;
+  const meta=document.createElement('div');meta.className='meta';meta.textContent=new Date(e.createdAt).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+  details.append(concept,meta);
+  const amount=document.createElement('div');amount.className='amount';amount.textContent=money(e.amount);
+  const del=document.createElement('button');del.className='delete';del.textContent='×';del.title='Eliminar gasto';del.onclick=()=>{if(confirm('¿Eliminar este gasto?')){expenses=expenses.filter(x=>x.id!==e.id);saveData()}};
+  row.append(ico,details,amount,del);$('expenseList').append(row);
+ });
+}
+function iconFor(c){c=c.toLowerCase();if(/comida|desayuno|comer|cena|almuerzo/.test(c))return'🍽️';if(/gasolina|transporte|taxi|uber|camion/.test(c))return'🚗';if(/super|despensa|tienda/.test(c))return'🛒';if(/salud|medicina|doctor|farmacia/.test(c))return'💊';if(/casa|renta|luz|agua/.test(c))return'🏠';return'💳'}
+function addExpense(concept,amount){concept=String(concept||'').trim();amount=Number(amount);if(!concept||!Number.isFinite(amount)||amount<=0){alert('Escribe un concepto y una cantidad válida.');return false}
+ expenses.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),concept,amount,date:dateKey(new Date()),createdAt:Date.now()});saveData();$('concept').value='';$('amount').value='';$('transcript').textContent='Gasto guardado correctamente ✓';return true}
+$('saveBtn').onclick=()=>addExpense($('concept').value,$('amount').value);
+$('budgetInput').value=dailyBudget>0?dailyBudget:'';
+$('budgetSave').onclick=()=>{const v=Number($('budgetInput').value);if(!Number.isFinite(v)||v<=0){alert('Escribe un presupuesto diario mayor que cero.');return}dailyBudget=v;localStorage.setItem('mgd_daily_budget',String(v));render();alert('Presupuesto diario guardado.');};
+$('filterDate').value=today;$('filterDate').onchange=render;
+$('exportBtn').onclick=()=>{if(!expenses.length){alert('No hay registros para exportar.');return}const rows=[['Fecha','Hora','Concepto','Cantidad MXN'],...expenses.map(e=>[e.date,new Date(e.createdAt).toLocaleTimeString('es-MX'),e.concept,e.amount])];const csv=rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mis-gastos.csv';a.click();URL.revokeObjectURL(a.href)};
+let recognition=null,listening=false;
+const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(SpeechRecognition){recognition=new SpeechRecognition();recognition.lang='es-MX';recognition.continuous=false;recognition.interimResults=true;
+ recognition.onstart=()=>{listening=true;$('voiceBtn').classList.add('listening');$('voiceText').textContent='Te escucho…'};
+ recognition.onend=()=>{listening=false;$('voiceBtn').classList.remove('listening');$('voiceText').textContent='Toca para dictar tu gasto'};
+ recognition.onerror=e=>{const msgs={ 'not-allowed':'Chrome bloqueó el micrófono. Revisa el permiso de Chrome en Ajustes de Android > Aplicaciones > Chrome > Permisos > Micrófono.','service-not-allowed':'El servicio de reconocimiento de voz está bloqueado. Revisa la conexión y los permisos de Chrome.','audio-capture':'No se detectó un micrófono disponible.','network':'El reconocimiento necesita conexión a Internet.','no-speech':'No detecté voz. Acércate al micrófono e inténtalo otra vez.'};$('transcript').textContent=msgs[e.error]||('No se pudo reconocer la voz ('+e.error+'). Intenta de nuevo.');};
+ recognition.onresult=e=>{let final='';for(let i=e.resultIndex;i<e.results.length;i++)final+=e.results[i][0].transcript;$('transcript').textContent='Escuché: '+final; if(e.results[e.results.length-1].isFinal){const parsed=parseSpeech(final);if(parsed){$('concept').value=parsed.concept;$('amount').value=parsed.amount;addExpense(parsed.concept,parsed.amount)}else{$('transcript').textContent='No identifiqué concepto y cantidad. Completa los campos y guarda.'}}};
+}else{$('voiceText').textContent='Activar dictado por voz';$('transcript').textContent='Si el dictado no está disponible, podrás usar el micrófono del teclado como alternativa.'}
+function parseSpeech(s){
+ let t=s.toLowerCase().replace(/[,$]/g,' ').replace(/\b(pesos?|mxn|m\.n\.|dólares?)\b/g,' ').replace(/\s+/g,' ').trim();
+ // Prefer the final numeric token as amount; supports "ciento cincuenta" via Speech API usually returning words.
+ let m=t.match(/(?:^|\s)(\d+(?:[.,]\d{1,2})?)(?:\s|$)/);
+ if(m){let amount=Number(m[1].replace(',','.'));let concept=(t.slice(0,m.index)+' '+t.slice(m.index+m[0].length)).trim().replace(/\b(gaste|gasté|pague|pagué|compre|compré|de|en|por|para|el|la|un|una)\b/g,' ').replace(/\s+/g,' ').trim();return concept?{concept:capitalize(concept),amount}:null}
+ const words={'cero':0,'uno':1,'una':1,'dos':2,'tres':3,'cuatro':4,'cinco':5,'seis':6,'siete':7,'ocho':8,'nueve':9,'diez':10,'quince':15,'veinte':20,'treinta':30,'cuarenta':40,'cincuenta':50,'sesenta':60,'setenta':70,'ochenta':80,'noventa':90,'cien':100,'ciento':100,'doscientos':200,'trescientos':300,'cuatrocientos':400,'quinientos':500,'seiscientos':600,'setecientos':700,'ochocientos':800,'novecientos':900,'mil':1000};
+ const tokens=t.split(' ');let amountWords=[],idx=-1;for(let i=tokens.length-1;i>=0;i--){if(words[tokens[i]]!==undefined||tokens[i]==='y'){idx=i;amountWords.unshift(tokens[i])}else if(idx>=0)break}
+ if(idx>=0){let amount=0,group=0;for(const w of amountWords){if(w==='y')continue;if(w==='mil'){amount+=(group||1)*1000;group=0}else group+=words[w]}amount+=group;let concept=tokens.slice(0,idx).concat(tokens.slice(idx+amountWords.length)).join(' ').replace(/\b(gaste|gasté|pague|pagué|compre|compré|de|en|por|para|el|la|un|una)\b/g,' ').replace(/\s+/g,' ').trim();if(concept&&amount>0)return{concept:capitalize(concept),amount}}
+ return null
+}
+function capitalize(s){return s.charAt(0).toLocaleUpperCase('es-MX')+s.slice(1)}
+$('voiceBtn').onclick=async()=>{if(listening){recognition?.stop();return}
+ $('transcript').textContent='Solicitando acceso al micrófono…';
+ try{
+  if(!navigator.mediaDevices?.getUserMedia){$('transcript').textContent='Este navegador no permite solicitar el micrófono aquí. Abre el enlace HTTPS en Chrome actualizado.';return}
+  const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+  stream.getTracks().forEach(track=>track.stop());
+  if(!recognition){$('transcript').textContent='El micrófono tiene permiso, pero este navegador no ofrece reconocimiento de voz. Usa el micrófono del teclado para dictar en el campo Concepto.';return}
+  $('transcript').textContent='Permiso concedido. Te escucho…';
+  recognition.start();
+ }catch(err){
+  const msg=err.name==='NotAllowedError'?'Permiso denegado. Activa Micrófono para Chrome en Ajustes de Android > Aplicaciones > Chrome > Permisos. También revisa que el acceso general al micrófono esté activado en los ajustes rápidos.':err.name==='NotFoundError'?'No se encontró un micrófono disponible en el dispositivo.':'No se pudo activar el micrófono: '+err.message;
+  $('transcript').textContent=msg;
+ }};
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;$('installBtn').hidden=false});
+$('installBtn').onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;$('installBtn').hidden=true};
+if('serviceWorker'in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+render();
+</script>
+</body></html>

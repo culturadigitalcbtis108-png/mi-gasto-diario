@@ -1,0 +1,19 @@
+MI GASTO DIARIO - PWA
+
+1. Sube el contenido de esta carpeta a un hosting HTTPS (por ejemplo, GitHub Pages o Netlify).
+2. Abre el enlace desde Chrome o Brave en Android.
+3. Usa el menú del navegador > Instalar aplicación / Añadir a pantalla de inicio.
+4. Para dictar, permite el acceso al micrófono cuando el navegador lo solicite.
+
+USO
+- Toca “Toca para dictar tu gasto”.
+- Di, por ejemplo: “Comida 150 pesos” o “Gasolina 300”.
+- Si reconoce concepto y cantidad, guarda automáticamente el movimiento.
+- También puedes capturar concepto y cantidad manualmente.
+- La fecha y hora se toman del teléfono.
+- El botón Exportar CSV descarga todos los movimientos.
+
+IMPORTANTE
+Los gastos se guardan en el almacenamiento local del navegador/dispositivo. No se sincronizan entre dispositivos. No borres los datos del navegador si quieres conservarlos; exporta periódicamente el CSV.
+
+El reconocimiento de voz requiere conexión y compatibilidad del navegador, aunque el registro manual y los datos guardados pueden funcionar sin conexión después de la primera carga.
